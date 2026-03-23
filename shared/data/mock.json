@@ -1,0 +1,62 @@
+{
+  "profissionais": [
+    {
+      "id": 1,
+      "nome": "Ana Silva",
+      "especialidade": "Designer UI/UX",
+      "bio": "Especialista em design de interfaces e experiência do usuário. Trabalho com Figma, prototipagem e design systems.",
+      "preco": 180,
+      "rating": 4.9,
+      "tags": ["Figma", "React", "Branding"],
+      "disponibilidade": "disponivel",
+      "total_agendamentos": 12
+    },
+    {
+      "id": 2,
+      "nome": "Bruno Costa",
+      "especialidade": "Desenvolvedor",
+      "bio": "Full-stack developer especializado em Node.js, Python e cloud. Ajudo empresas a escalar suas aplicações.",
+      "preco": 220,
+      "rating": 4.7,
+      "tags": ["Node.js", "Python", "AWS"],
+      "disponibilidade": "ocupado",
+      "total_agendamentos": 8
+    }
+  ],
+  "servicos": [
+    {
+      "id": 101,
+      "profissional_id": 1,
+      "nome": "Design de Interface (UI)",
+      "descricao": "Criação de layouts responsivos e protótipos interativos.",
+      "duracao_min": 120,
+      "preco": 180
+    },
+    {
+      "id": 102,
+      "profissional_id": 1,
+      "nome": "Auditoria UX",
+      "descricao": "Análise completa da experiência do usuário e sugestões de melhorias.",
+      "duracao_min": 90,
+      "preco": 150
+    },
+    {
+      "id": 201,
+      "profissional_id": 2,
+      "nome": "Desenvolvimento API",
+      "descricao": "Criação de APIs RESTful com Node.js e Express.",
+      "duracao_min": 180,
+      "preco": 220
+    },
+    {
+      "id": 202,
+      "profissional_id": 2,
+      "nome": "Otimização de Performance",
+      "descricao": "Análise e otimização de aplicações backend.",
+      "duracao_min": 120,
+      "preco": 200
+    }
+  ],
+  "avaliacoes": [],
+  "agendamentos": []
+}

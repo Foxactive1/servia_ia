@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servia — Encontre profissionais</title>
+  <link rel="stylesheet" href="./shared/styles/tokens.css">
+  <link rel="stylesheet" href="./shared/styles/components.css">
+  <link rel="stylesheet" href="public.css">
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Credenciais — em dev preencha /env.js; em produção gerado pelo build -->
+  <script src="./env.js"></script>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="pub-nav" role="navigation" aria-label="Navegação principal">
+  <a href="/" class="pub-logo" aria-label="Servia — página inicial">Ser<span>via</span></a>
+  <div class="pub-nav-links">
+    <a href="#profissionais">Profissionais</a>
+    <a href="#como-funciona">Como funciona</a>
+    <a href="./admin/index.html">Área Admin</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" aria-label="Apresentação">
+  <div class="hero-left">
+    <div class="hero-eyebrow">✦ Plataforma de profissionais</div>
+    <h1 class="hero-title">
+      Os melhores<br>
+      profissionais,<br>
+      <em>ao seu alcance</em>
+    </h1>
+    <p class="hero-sub">
+      Encontre especialistas verificados, agende serviços e gerencie tudo em um só lugar.
+    </p>
+    <div class="hero-search" role="search">
+      <input id="hero-input" type="search"
+             placeholder="Buscar por nome, especialidade ou habilidade…"
+             aria-label="Buscar profissional">
+      <button class="hero-search-btn" data-action="heroSearch" aria-label="Buscar">
+        Buscar
+      </button>
+    </div>
+    <div class="hero-trust" aria-label="Números da plataforma">
+      <span>✓ Profissionais verificados</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>✓ Agendamento em minutos</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>✓ Suporte dedicado</span>
+    </div>
+  </div>
+  <div class="hero-right" aria-hidden="true">
+    <div class="hero-float-cards">
+      <div class="hero-mini-card">
+        <div class="avatar avatar-sm" style="background:#2c4a7c">AS</div>
+        <div class="hero-mini-info">
+          <div class="name">Ana Silva</div>
+          <div class="esp">Designer UI/UX</div>
+          <div class="hero-mini-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="hero-mini-card">
+        <div class="avatar avatar-sm" style="background:#c0572b">BC</div>
+        <div class="hero-mini-info">
+          <div class="name">Bruno Costa</div>
+          <div class="esp">Desenvolvedor Full-stack</div>
+          <div class="hero-mini-stars">★★★★☆</div>
+        </div>
+      </div>
+      <div class="hero-mini-card">
+        <div class="avatar avatar-sm" style="background:#5a7a62">CM</div>
+        <div class="hero-mini-info">
+          <div class="name">Carla Mendes</div>
+          <div class="esp">Marketing Digital</div>
+          <div class="hero-mini-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BARRA DE ESPECIALIDADES ═══ -->
+<div class="esp-bar" id="esp-bar" role="group" aria-label="Filtrar por especialidade">
+  <!-- Pills geradas dinamicamente pelo JS via renderEspBar() -->
+</div>
+
+<!-- ═══ SEÇÃO PROFISSIONAIS ═══ -->
+<section class="section" id="profissionais" aria-label="Profissionais">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Profissionais</h2>
+      <p class="section-sub" id="pro-count" aria-live="polite">Carregando…</p>
+    </div>
+    <div class="filters-row">
+      <div class="search-bar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input id="search-input" type="search"
+               placeholder="Buscar…" aria-label="Buscar profissional">
+      </div>
+      <select class="filter-select" data-action="setDisp" aria-label="Filtrar por disponibilidade">
+        <option value="todos">Disponibilidade</option>
+        <option value="disponivel">Disponíveis</option>
+        <option value="ocupado">Ocupados</option>
+      </select>
+      <select class="filter-select" data-action="setOrder" aria-label="Ordenar por">
+        <option value="rating">Melhor avaliação</option>
+        <option value="preco_asc">Menor preço</option>
+        <option value="preco_desc">Maior preço</option>
+      </select>
+    </div>
+  </div>
+  <div class="pro-grid" id="pro-grid" role="list" aria-label="Lista de profissionais"></div>
+</section>
+
+<!-- ═══ COMO FUNCIONA ═══ -->
+<section class="how-section" id="como-funciona" aria-label="Como funciona">
+  <div class="how-inner">
+    <h2 class="how-title">Como funciona</h2>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-num" aria-hidden="true">1</div>
+        <h4>Encontre</h4>
+        <p>Busque por especialidade, disponibilidade ou avaliação dos profissionais.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-num" aria-hidden="true">2</div>
+        <h4>Agende</h4>
+        <p>Escolha o serviço, data e horário diretamente pelo perfil do profissional.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-num" aria-hidden="true">3</div>
+        <h4>Pronto</h4>
+        <p>Receba a confirmação por email e aproveite o atendimento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="pub-footer" role="contentinfo">
+  <span class="logo pub-logo">Ser<span>via</span></span>
+  <span>© 2025 Servia. Todos os direitos reservados.</span>
+</footer>
+
+<!-- ═══ MODAL PERFIL ═══ -->
+<div class="modal-overlay" id="modal-perfil"
+     role="dialog" aria-modal="true" aria-label="Perfil do profissional">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header">
+      <h2 style="font-family:var(--font-display)">Perfil</h2>
+      <button class="modal-close" data-action="closePerfil" aria-label="Fechar perfil">✕</button>
+    </div>
+    <div id="perfil-modal-content"></div>
+  </div>
+</div>
+
+<!-- ═══ TOASTS ═══ -->
+<div class="toast-container" id="toast-container"
+     aria-live="polite" aria-atomic="false"></div>
+
+<script type="module" src="public.js"></script>
+</body>
+</html>

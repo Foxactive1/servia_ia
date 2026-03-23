@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════
+   SERVIA — Design Tokens
+   Shared between public and admin
+═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+
+:root {
+  /* Color Palette */
+  --ink:        #0f0e0d;
+  --ink-soft:   #2a2825;
+  --paper:      #f5f2ed;
+  --cream:      #ede9e1;
+  --cream-dark: #e2ddd4;
+  --white:      #ffffff;
+  --border:     #d6d0c6;
+  --muted:      #8a8278;
+
+  /* Accent Colors */
+  --gold:       #c9a84c;
+  --gold-light: #e8d5a0;
+  --gold-dim:   #c9a84c22;
+  --rust:       #c0572b;
+  --rust-dim:   #c0572b18;
+  --sage:       #5a7a62;
+  --sage-dim:   #5a7a6218;
+  --blue:       #2c4a7c;
+  --blue-dim:   #2c4a7c18;
+
+  /* Card & Surface */
+  --card-bg:    #faf9f6;
+  --surface:    #f0ece4;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 8px rgba(15,14,13,0.06);
+  --shadow:     0 2px 20px rgba(15,14,13,0.08);
+  --shadow-lg:  0 8px 48px rgba(15,14,13,0.14);
+  --shadow-xl:  0 20px 80px rgba(15,14,13,0.18);
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* Radius */
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  24px;
+  --r-full: 9999px;
+
+  /* Transitions */
+  --t-fast:   0.15s ease;
+  --t-normal: 0.25s ease;
+  --t-slow:   0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Avatar palette */
+  --av-0: #2c4a7c;
+  --av-1: #c9a84c;
+  --av-2: #c0572b;
+  --av-3: #5a7a62;
+  --av-4: #7c4a6e;
+  --av-5: #4a7c7a;
+  --av-6: #7c6a2c;
+  --av-7: #2c6a7c;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--r-full); }
+
+::selection { background: var(--gold-dim); }

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servia Admin — Visão Geral</title>
+  <link rel="stylesheet" href="../shared/styles/tokens.css">
+  <link rel="stylesheet" href="../shared/styles/components.css">
+  <link rel="stylesheet" href="admin.css">
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- ⚠️  env.js: em dev, preencha na raiz do projeto; em produção é gerado pelo build -->
+  <script src="../env.js"></script>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="admin-topbar" role="banner">
+  <div class="admin-logo" aria-label="Servia Admin">
+    Ser<span>via</span>
+    <small aria-hidden="true">Admin</small>
+  </div>
+
+  <nav class="admin-nav" role="navigation" aria-label="Navegação principal">
+    <button class="admin-nav-btn active" onclick="navigate('dashboard')"   aria-current="page">Visão Geral</button>
+    <button class="admin-nav-btn"        onclick="navigate('profissionais')">Profissionais</button>
+    <button class="admin-nav-btn"        onclick="navigate('agenda')">Agenda</button>
+    <button class="admin-nav-btn"        onclick="navigate('avaliacoes')">Avaliações</button>
+  </nav>
+
+  <div class="topbar-actions">
+    <a href="../index.html" class="topbar-pub-link" target="_blank" rel="noopener">Ver vitrine pública ↗</a>
+    <button class="btn btn-gold btn-sm" onclick="openModal()">+ Novo Profissional</button>
+  </div>
+</header>
+
+<!-- ═══ LAYOUT ═══ -->
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar" aria-label="Filtros e estatísticas">
+    <div>
+      <div class="sidebar-section-title">Estatísticas</div>
+      <div class="sidebar-stat-grid" id="sb-stats"></div>
+    </div>
+    <div>
+      <div class="sidebar-section-title">Especialidade</div>
+      <div class="sidebar-filter-list" id="sb-esp"></div>
+    </div>
+    <div>
+      <div class="sidebar-section-title">Status Agendamentos</div>
+      <div class="sidebar-filter-list" id="sb-status"></div>
+    </div>
+    <div>
+      <div class="sidebar-section-title">Disponibilidade</div>
+      <!-- Renderizado dinamicamente pelo JS via renderSidebarDisp() -->
+      <div class="sidebar-filter-list" id="sb-disp"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main" id="admin-main">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="admin-view active" id="view-dashboard" role="region" aria-label="Visão Geral">
+      <div class="view-header">
+        <div>
+          <h1>Visão Geral</h1>
+          <p>Resumo da plataforma em tempo real</p>
+        </div>
+      </div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="dash-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Agendamentos por Profissional</h3>
+          </div>
+          <div class="bar-chart" id="dash-bar-chart"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Atividade Recente</h3></div>
+          <div class="recent-list" id="dash-recent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROFISSIONAIS ── -->
+    <div class="admin-view" id="view-profissionais" role="region" aria-label="Profissionais">
+      <div class="view-header">
+        <div>
+          <h1>Profissionais</h1>
+          <p id="pro-count-lbl" aria-live="polite">Carregando…</p>
+        </div>
+        <div class="view-header-right">
+          <div class="search-bar search-bar--md">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" placeholder="Buscar…" aria-label="Buscar profissionais" oninput="searchPro(this.value)">
+          </div>
+          <select class="filter-select" aria-label="Filtrar por disponibilidade" onchange="setFilterDisp(this.value)">
+            <option value="todos">Todos</option>
+            <option value="disponivel">Disponíveis</option>
+            <option value="ocupado">Ocupados</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal()">+ Adicionar</button>
+        </div>
+      </div>
+      <div class="pro-grid" id="pro-grid"></div>
+    </div>
+
+    <!-- ── AGENDA ── -->
+    <div class="admin-view" id="view-agenda" role="region" aria-label="Agenda">
+      <div class="view-header">
+        <div>
+          <h1>Agenda</h1>
+          <p id="agenda-count-lbl" aria-live="polite">Carregando…</p>
+        </div>
+        <div class="view-header-right">
+          <div class="search-bar search-bar--md">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" placeholder="Buscar cliente ou profissional…" aria-label="Buscar agendamentos" oninput="searchAgenda(this.value)">
+          </div>
+        </div>
+      </div>
+      <div class="agenda-layout">
+        <div class="agenda-list" id="agenda-list"></div>
+
+        <!-- Painel de novo agendamento -->
+        <div class="booking-panel" aria-label="Novo agendamento">
+          <h3>Novo Agendamento</h3>
+
+          <div class="booking-field">
+            <label for="b-cliente">Nome do cliente</label>
+            <input id="b-cliente" type="text" placeholder="Nome completo" autocomplete="name">
+          </div>
+
+          <div class="booking-field">
+            <label for="b-email">Email</label>
+            <input id="b-email" type="email" placeholder="email@cliente.com" autocomplete="email">
+          </div>
+
+          <div class="booking-field">
+            <label for="b-pro-select">Profissional</label>
+            <select id="b-pro-select" aria-label="Selecionar profissional">
+              <option value="">Selecione…</option>
+            </select>
+          </div>
+
+          <div class="booking-field">
+            <label for="b-servico">Serviço</label>
+            <input id="b-servico" type="text" placeholder="Ex: Design Sprint">
+          </div>
+
+          <div class="booking-field">
+            <label for="b-data">Data e hora</label>
+            <input id="b-data" type="datetime-local">
+          </div>
+
+          <!-- Área de erro inline -->
+          <div id="booking-error" class="booking-error" role="alert" aria-live="assertive" hidden></div>
+
+          <button class="btn btn-gold btn-full booking-submit" onclick="addAgendamento()">
+            Criar Agendamento
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AVALIAÇÕES ── -->
+    <div class="admin-view" id="view-avaliacoes" role="region" aria-label="Avaliações">
+      <div class="view-header">
+        <div>
+          <h1>Avaliações</h1>
+          <p id="av-count-lbl" aria-live="polite">Carregando…</p>
+        </div>
+      </div>
+      <div class="avs-grid" id="av-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ MODAL PROFISSIONAL ═══ -->
+<div class="modal-overlay" id="modal-pro" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-title">Novo Profissional</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Fechar modal">✕</button>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="m-nome">Nome completo</label>
+        <input id="m-nome" class="form-control" type="text" placeholder="Ex: Ana Silva" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="m-esp">Especialidade</label>
+        <input id="m-esp" class="form-control" type="text" placeholder="Ex: Designer UI/UX">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="m-bio">Bio</label>
+      <textarea id="m-bio" class="form-control" rows="2" placeholder="Descrição profissional…"></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="m-preco">Valor/hora (R$)</label>
+        <input id="m-preco" class="form-control" type="number" min="0" placeholder="150">
+      </div>
+      <div class="form-group">
+        <label for="m-rating">Avaliação (1–5)</label>
+        <input id="m-rating" class="form-control" type="number" min="1" max="5" step="0.1" placeholder="4.8">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="m-tags">Tags (separadas por vírgula)</label>
+      <input id="m-tags" class="form-control" type="text" placeholder="Ex: React, Figma, UI/UX">
+    </div>
+
+    <div class="form-group">
+      <label for="m-avatar">URL do avatar <span class="form-optional">(opcional)</span></label>
+      <input id="m-avatar" class="form-control" type="url" placeholder="https://…">
+    </div>
+
+    <div class="form-group">
+      <label for="m-disp">Disponibilidade</label>
+      <select id="m-disp" class="form-control">
+        <option value="disponivel">Disponível</option>
+        <option value="ocupado">Ocupado</option>
+      </select>
+    </div>
+
+    <!-- Área de erro inline -->
+    <div id="modal-error" class="form-error" role="alert" aria-live="assertive" hidden></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-pro" style="flex:2" onclick="savePro()">Salvar Profissional</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOASTS ═══ -->
+<div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
