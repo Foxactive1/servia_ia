@@ -9,7 +9,7 @@
 ```
 servia/
 │
-├── public/                      ← Vitrine pública (clientes)
+├                     ← Vitrine pública (clientes)
 │   ├── index.html               ← Página principal
 │   ├── public.css               ← Estilos da vitrine
 │   └── public.js                ← Lógica da vitrine
